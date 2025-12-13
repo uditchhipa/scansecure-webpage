@@ -15,29 +15,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SecureScan - AI Powered Malware Detection",
-  description: "Detect hidden malware in APKs and EXEs instantly.",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4278577605465108"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-        <Analytics />
-      </body>
-    </html>
-  );
+  export const metadata: Metadata = {
+    title: "SecureScan | Free Online Malware Scanner for APK, EXE & PDF",
+    description: "Detect hidden malware, spyware, and viruses in your files instantly. Supports APK, EXE, PDF, and TXT. Cloud-based analysis for Android and Windows security. 100% Free.",
+    keywords: "malware scanner, virus total, apk scanner, online virus scan, pdf malware checker, exe virus scanner, android security, ransomware detector, free antivirus",
+    openGraph: {
+      title: "SecureScan - Free Online Malware Detection",
+      description: "Scan your files for hidden threats. Protect your device from malware.",
+      type: "website",
+      locale: "en_US",
+      siteName: "SecureScan",
+    },
+    return(
+      <html lang = "en" suppressHydrationWarning>
+  <body
+    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+  >
+    {children}
+    <Script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4278577605465108"
+      crossOrigin="anonymous"
+      strategy="afterInteractive"
+    />
+    <Analytics />
+  </body>
+      </html >
+    );
 }

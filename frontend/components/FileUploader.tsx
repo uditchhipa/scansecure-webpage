@@ -9,9 +9,16 @@ import { motion } from 'framer-motion';
 interface FileUploaderProps {
     onUpload: (file: File) => void;
     isAnalyzing: boolean;
+    accept?: string;
+    description?: string;
 }
 
-export const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, isAnalyzing }) => {
+export const FileUploader: React.FC<FileUploaderProps> = ({
+    onUpload,
+    isAnalyzing,
+    accept = ".exe,.apk",
+    description = "Supports .EXE, .APK (Max 100MB)"
+}) => {
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,6 +75,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, isAnalyzin
                     ref={fileInputRef}
                     className="hidden"
                     onChange={handleFileChange}
+                    accept={accept}
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 rounded-3xl -z-10" />
@@ -85,10 +93,10 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, isAnalyzin
                             <Upload className="w-8 h-8 text-emerald-400" />
                         </div>
                         <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-blue-400 mb-2">
-                            Drop your App or File here
+                            Drop your File here
                         </h3>
                         <p className="text-slate-400 text-sm">
-                            Supports .EXE, .APK (Max 100MB)
+                            {description}
                         </p>
                     </>
                 )}

@@ -3,3 +3,4 @@ uvicorn
 python-multipart
 pefile
 aiofiles
+razorpay

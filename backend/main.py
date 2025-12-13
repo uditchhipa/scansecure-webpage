@@ -1,21 +1,48 @@
 
+
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
 import aiofiles
 from analyzer.core import analyze_file
+import razorpay
+from pydantic import BaseModel
 
-app = FastAPI(title="Malware Detector API")
+app = FastAPI()
 
-# Setup CORS for frontend
+# Initialize Razorpay Client (Keys provided by user)
+# In production, use os.getenv("RAZORPAY_KEY_ID")
+razorpay_client = razorpay.Client(auth=("rzp_test_RrD6BJSObt6orj", "ll4TnA6cyYd65QeKNE4OdZGz"))
+
+class OrderRequest(BaseModel):
+    amount: int  # Amount in paise (e.g., 4900 = ₹49)
+
+# Configure CORS
+origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://your-vercel-app.vercel.app", 
+    "*" # Allow all for simplicity during MVP
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for production (Vercel/Render)
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.post("/create-order")
+async def create_order(request: OrderRequest):
+    try:
+        data = { "amount": request.amount, "currency": "INR", "receipt": "order_rcptid_11" }
+        order = razorpay_client.order.create(data=data)
+        return order
+    except Exception as e:
+        print(f"Razorpay Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 os.makedirs("uploads", exist_ok=True)
 

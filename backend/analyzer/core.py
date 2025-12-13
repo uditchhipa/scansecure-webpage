@@ -4,6 +4,7 @@ import hashlib
 from .utils import AnalysisResult
 from .exe_analyzer import analyze_exe
 from .apk_analyzer import analyze_apk
+from .doc_analyzer import analyze_document
 
 def get_file_hash(file_path: str) -> str:
     sha256_hash = hashlib.sha256()
@@ -21,6 +22,10 @@ def analyze_file(file_path: str, original_filename: str) -> dict:
         file_type = "exe"
     elif ext == ".apk":
         file_type = "apk"
+    elif ext == ".pdf":
+        file_type = "pdf"
+    elif ext == ".txt":
+        file_type = "txt"
         
     result = AnalysisResult(original_filename, file_type)
     
@@ -36,6 +41,15 @@ def analyze_file(file_path: str, original_filename: str) -> dict:
         result = analyze_exe(file_path, result)
     elif file_type == "apk":
         result = analyze_apk(file_path, result)
+    elif file_type in ["pdf", "txt"]:
+        # Adapt dict response to AnalysisResult object
+        doc_data = analyze_document(file_path)
+        result.risk_score = doc_data["risk_score"]
+        result.risk_level = doc_data["risk_level"]
+        result.is_malicious = doc_data["is_malicious"]
+        for findings in doc_data["findings"]:
+            result.add_finding(findings, 0)
+        result.metadata.update(doc_data["metadata"])
     else:
         result.add_finding(f"Unsupported file type: {ext}", 0)
         

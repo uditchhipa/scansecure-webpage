@@ -2,8 +2,6 @@
 
 A powerful web application to scan `.exe` and `.apk` files for malware using static analysis. It detects dangerous permissions, suspicious API imports, and high-entropy sections to keep you safe.
 
-![SecureScan App](https://via.placeholder.com/800x400?text=SecureScan+App+Preview) 
-*(You can add your own screenshot here later)*
 
 ## ✨ Features
 - **APK Analysis**: Scans Android apps for dangerous permissions and lists all internal files.

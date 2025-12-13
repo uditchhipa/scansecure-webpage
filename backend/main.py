@@ -11,7 +11,7 @@ app = FastAPI(title="Malware Detector API")
 # Setup CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Adjust if frontend port differs
+    allow_origins=["*"],  # Allow all origins for production (Vercel/Render)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

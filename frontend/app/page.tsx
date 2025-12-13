@@ -19,8 +19,11 @@ export default function Home() {
     const formData = new FormData();
     formData.append("file", file);
 
+    // Use environment variable for production (Vercel), fallback to localhost for dev
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
     try {
-      const response = await fetch("http://localhost:8000/upload", {
+      const response = await fetch(`${API_BASE}/upload`, {
         method: "POST",
         body: formData,
       });

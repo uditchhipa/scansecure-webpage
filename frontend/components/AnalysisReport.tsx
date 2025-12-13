@@ -115,7 +115,7 @@ export const AnalysisReport: React.FC<AnalysisReportProps> = ({ report, onReset 
                                 {/* Soft Monetization for Safe Users */}
                                 <div className="mt-4 flex items-center justify-between p-3 rounded-xl bg-slate-800/30 border border-white/5">
                                     <span className="text-slate-400 text-sm">Help us keep this tool free!</span>
-                                    <a href="https://www.buymeacoffee.com/" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition-colors text-sm font-bold">
+                                    <a href="https://www.buymeacoffee.com/uditchhipa1" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition-colors text-sm font-bold">
                                         <span>☕</span> Buy me a coffee
                                     </a>
                                 </div>

@@ -48,14 +48,51 @@ def analyze_apk(file_path: str, result: AnalysisResult) -> AnalysisResult:
                     
             result.metadata["permissions_count"] = len(permissions_found)
             
-            # Check for reasonable classes.dex
-            if 'classes.dex' in z.namelist():
+            # Extract full file list
+            file_list = z.namelist()
+            result.metadata["file_structure"] = file_list
+            
+            # Check for suspicious files inside the APK
+            suspicious_exts = ['.exe', '.bat', '.sh', '.vbs', '.ps1', '.cmd']
+            suspicious_files = [f for f in file_list if any(f.lower().endswith(ext) for ext in suspicious_exts)]
+            
+            if suspicious_files:
+                for suspicious_file in suspicious_files:
+                    result.add_finding(f"Suspicious file detected inside APK: {suspicious_file}", 5)
+                    
+            # Deep Scan: Analyze content of script/code files
+            deep_scan_exts = ['.xml', '.smali', '.js', '.html', '.sh', '.py']
+            dangerous_patterns = {
+                b"eval(": "Dynamic Code Execution (eval)",
+                b"exec(": "Dynamic Code Execution (exec)",
+                b"base64_decode": "Obfuscated Data (Base64)",
+                b"getRuntime().exec": "Shell Command Execution",
+                b"http://": "Insecure Network Call (HTTP)",
+                b"192.168.": "Private IP Address Reference"
+            }
+            
+            scanned_count = 0
+            MAX_SCAN_FILES = 50 # Limit to avoid timeouts on large APKs
+            
+            for file_name in file_list:
+                if any(file_name.lower().endswith(ext) for ext in deep_scan_exts):
+                    if scanned_count > MAX_SCAN_FILES: break
+                    scanned_count += 1
+                    
+                    try:
+                        with z.open(file_name) as f:
+                            content = f.read(4096) # Read first 4kb
+                            for pattern, desc in dangerous_patterns.items():
+                                if pattern in content:
+                                    result.add_finding(f"Malicious Code ({desc}) found in {file_name}", 4)
+                    except:
+                        pass
+            
+            # Check for 'classes.dex' (Standard Android Code)
+            if 'classes.dex' in file_list:
                  result.metadata["has_dex"] = True
             else:
                  result.add_finding("Suspicious: No classes.dex found (no code?)", 2)
-
-            # Extract full file list
-            result.metadata["file_structure"] = z.namelist()
 
 
     except zipfile.BadZipFile:

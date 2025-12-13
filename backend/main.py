@@ -6,10 +6,15 @@ import shutil
 import os
 import aiofiles
 from analyzer.core import analyze_file
+from analyzer.doc_analyzer import analyze_document
+from analyzer.url_analyzer import analyze_url
 import razorpay
 from pydantic import BaseModel
 
 app = FastAPI()
+
+class URLRequest(BaseModel):
+    url: str
 
 # Initialize Razorpay Client (Keys provided by user)
 # In production, use os.getenv("RAZORPAY_KEY_ID")
@@ -33,6 +38,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.post("/scan-url")
+async def scan_url(request: URLRequest):
+    import asyncio
+    print(f"Scanning URL: {request.url}")
+    result = await asyncio.to_thread(analyze_url, request.url)
+    return result.to_dict()
 
 @app.post("/create-order")
 async def create_order(request: OrderRequest):
@@ -61,9 +73,10 @@ async def upload_file(file: UploadFile = File(...)):
             await out_file.write(content)
         print("File saved successfully")
             
-        # Run analysis
+        # Run analysis (in threadpool to avoid blocking async loop)
         print("Starting analysis...")
-        report = analyze_file(file_location, file.filename)
+        import asyncio
+        report = await asyncio.to_thread(analyze_file, file_location, file.filename)
         print("Analysis complete")
         
         # Cleanup (optional, keeping for inspection for now)

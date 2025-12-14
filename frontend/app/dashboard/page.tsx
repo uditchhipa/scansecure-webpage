@@ -189,8 +189,22 @@ export default function Dashboard() {
                                 {/* Purchase Option */}
                                 <button
                                     onClick={handlePurchase}
-                                    className="w-full py-2.5 text-xs font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 rounded-lg text-white transition-all shadow-lg hover:shadow-emerald-500/25 flex items-center justify-center gap-2">
-                                    <Wallet className="w-4 h-4" /> Purchase Premium Key
+                                    disabled={!isRazorpayLoaded}
+                                    className={`w-full py-2.5 text-xs font-bold rounded-lg text-white transition-all shadow-lg flex items-center justify-center gap-2
+                                        ${!isRazorpayLoaded
+                                            ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                                            : "bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 hover:shadow-emerald-500/25"}
+                                    `}>
+                                    {!isRazorpayLoaded ? (
+                                        <>
+                                            <div className="w-3 h-3 border-2 border-slate-500 border-t-transparent rounded-full animate-spin"></div>
+                                            Loading Payment Gateway...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Wallet className="w-4 h-4" /> Purchase Premium Key
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -209,8 +223,13 @@ export default function Dashboard() {
                             </ul>
                             <button
                                 onClick={handlePurchase}
-                                className="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/20">
-                                Buy Pro Plan - ₹499/mo
+                                disabled={!isRazorpayLoaded}
+                                className={`w-full font-bold py-2 rounded-lg transition-colors shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2
+                                    ${!isRazorpayLoaded
+                                        ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                                        : "bg-indigo-600 text-white hover:bg-indigo-500"}
+                                `}>
+                                {!isRazorpayLoaded ? "Loading..." : "Buy Pro Plan - ₹499/mo"}
                             </button>
                         </div>
                     </div>

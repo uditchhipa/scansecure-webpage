@@ -7,10 +7,10 @@ import { FileUploader } from "../../components/FileUploader";
 import { Footer } from "../../components/Footer";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import TerminalLog from "../../components/TerminalLog";
 
 export default function DocScanner() {
     const [report, setReport] = useState<any>(null);
-
     const [isAnalyzing, setIsAnalyzing] = useState(false);
 
     const handleFileSelect = async (file: File) => {
@@ -21,11 +21,17 @@ export default function DocScanner() {
         formData.append("file", file);
 
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-            const response = await fetch(`${apiUrl}/upload`, {
+            // Force Minimum 3 Second "Hacker Processing" Time
+            const minTimePromise = new Promise(resolve => setTimeout(resolve, 3000));
+
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082";
+            const responsePromise = fetch(`${apiUrl}/upload`, {
                 method: "POST",
                 body: formData,
             });
+
+            // Wait for BOTH
+            const [_, response] = await Promise.all([minTimePromise, responsePromise]);
 
             if (!response.ok) throw new Error("Analysis failed");
 
@@ -59,8 +65,15 @@ export default function DocScanner() {
                             Secure<span className="text-blue-400">Scan</span>
                         </span>
                     </Link>
-                    <div className="text-xs font-mono text-blue-500 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">
-                        Doc Scanner
+
+                    <div className="flex items-center gap-4">
+                        <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/20 border border-blue-500/20">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                            <span className="text-xs font-mono text-blue-500">SYSTEM: ONLINE</span>
+                        </div>
+                        <div className="text-xs font-mono text-blue-500 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">
+                            Doc Scanner
+                        </div>
                     </div>
                 </div>
             </header>
@@ -86,12 +99,24 @@ export default function DocScanner() {
                             </div>
 
                             <div className="w-full max-w-xl">
-                                <FileUploader
-                                    onUpload={handleFileSelect}
-                                    isAnalyzing={isAnalyzing}
-                                    accept=".pdf,.txt,application/pdf,text/plain"
-                                    description="Supports .PDF and .TXT files (Max 10MB)"
-                                />
+                                {isAnalyzing ? (
+                                    <div className="animate-fade-in">
+                                        <div className="text-center mb-6">
+                                            <h3 className="text-xl font-bold text-blue-400 animate-pulse">
+                                                ANALYZING DOCUMENT STRUCTURE...
+                                            </h3>
+                                            <p className="text-slate-500 text-sm">Scanning for embedded scripts...</p>
+                                        </div>
+                                        <TerminalLog />
+                                    </div>
+                                ) : (
+                                    <FileUploader
+                                        onUpload={handleFileSelect}
+                                        isAnalyzing={isAnalyzing}
+                                        accept=".pdf,.txt,application/pdf,text/plain"
+                                        description="Supports .PDF and .TXT files (Max 10MB)"
+                                    />
+                                )}
                             </div>
                         </div>
                     ) : (

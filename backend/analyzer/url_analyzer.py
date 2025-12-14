@@ -28,6 +28,13 @@ def analyze_url(url: str) -> AnalysisResult:
         parsed = urllib.parse.urlparse(url)
         domain = parsed.netloc.lower()
         path = parsed.path.lower()
+        
+        # 0. Check Whitelist (Self-Check)
+        WHITELISTED_DOMAINS = ["mysecurescan.tech", "www.mysecurescan.tech", "scansecure.io", "localhost"]
+        if any(wl in domain for wl in WHITELISTED_DOMAINS):
+            result.add_finding(f"Domain '{domain}' is verified safe (Whitelisted)", 0)
+            return result
+            
     except Exception as e:
         result.add_finding(f"Invalid URL format: {str(e)}", 10)
         return result
@@ -39,9 +46,28 @@ def analyze_url(url: str) -> AnalysisResult:
         result.add_finding("URL is using secure HTTPS protocol", 0)
 
     # 2. Keyword Analysis
-    found_keywords = [kw for kw in SUSPICIOUS_KEYWORDS if kw in domain or kw in path]
-    if found_keywords:
-        result.add_finding(f"Suspicious keywords found in URL: {', '.join(found_keywords)}", 5)
+    HIGH_RISK_KEYWORDS = ["verify", "account", "update", "bank", "alert", "confirm", "wallet", "password", "signin"]
+    MEDIUM_RISK_KEYWORDS = ["secure", "support", "admin", "login", "crypto", "paypal"]
+    
+    found_high = [kw for kw in HIGH_RISK_KEYWORDS if kw in domain or kw in path]
+    found_med = [kw for kw in MEDIUM_RISK_KEYWORDS if kw in domain or kw in path]
+    
+    if found_high:
+         result.add_finding(f"High Risk keywords found: {', '.join(found_high)}", 6)
+    
+    if found_med:
+        # Context Check: "secure" on HTTPS is usually fine, but "secure" on HTTP is bad.
+        is_secure_keyword = "secure" in found_med
+        if is_secure_keyword and parsed.scheme == "https":
+             # It's HTTPS, so "secure" is less suspicious. Downgrade to Info/Low.
+             if len(found_med) == 1:
+                 result.add_finding("Domain contains 'secure' but uses HTTPS (Likely False Positive)", 1)
+             else:
+                 result.add_finding(f"Suspicious keywords found: {', '.join(found_med)}", 3)
+        else:
+             # HTTP + "secure" OR other keywords
+             score = 5 if parsed.scheme == "http" else 3
+             result.add_finding(f"Suspicious keywords found: {', '.join(found_med)}", score)
 
     # 3. TLD Analysis
     if any(domain.endswith(tld) for tld in SUSPICIOUS_TLDS):

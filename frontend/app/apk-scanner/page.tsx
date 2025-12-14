@@ -7,33 +7,53 @@ import { FileUploader } from "../../components/FileUploader";
 import { Footer } from "../../components/Footer";
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import TerminalLog from "../../components/TerminalLog";
 
 export default function ApkScanner() {
     const [report, setReport] = useState<any>(null);
-
     const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleFileSelect = async (file: File) => {
         setIsAnalyzing(true);
         setReport(null);
+        setError(null);
 
         const formData = new FormData();
         formData.append("file", file);
 
         try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-            const response = await fetch(`${apiUrl}/upload`, {
+            // Force Minimum 3 Second "Hacker Processing" Time
+            const minTimePromise = new Promise(resolve => setTimeout(resolve, 3000));
+
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082";
+
+            // Get Token from LocalStorage
+            const token = localStorage.getItem("token");
+            const headers: Record<string, string> = {};
+            if (token && token !== "guest_token") {
+                headers["Authorization"] = `Bearer ${token}`;
+            }
+
+            const responsePromise = fetch(`${apiUrl}/upload`, {
                 method: "POST",
+                headers: headers,
                 body: formData,
             });
 
-            if (!response.ok) throw new Error("Analysis failed");
+            // Wait for BOTH the API and the 3s Timer
+            const [_, response] = await Promise.all([minTimePromise, responsePromise]);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server Error: ${response.status} ${response.statusText} - ${errorText}`);
+            }
 
             const data = await response.json();
             setReport(data);
-        } catch (error) {
-            console.error(error);
-            alert("Analysis failed. Please try again.");
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || "Something went wrong during analysis.");
         } finally {
             setIsAnalyzing(false);
         }
@@ -59,8 +79,15 @@ export default function ApkScanner() {
                             Secure<span className="text-emerald-400">Scan</span>
                         </span>
                     </Link>
-                    <div className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
-                        APK Scanner
+
+                    <div className="flex items-center gap-4">
+                        <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/20 border border-emerald-500/20">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-xs font-mono text-emerald-500">SYSTEM: ONLINE</span>
+                        </div>
+                        <div className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
+                            APK Scanner
+                        </div>
                     </div>
                 </div>
             </header>
@@ -86,12 +113,24 @@ export default function ApkScanner() {
                             </div>
 
                             <div className="w-full max-w-xl">
-                                <FileUploader
-                                    onUpload={handleFileSelect}
-                                    isAnalyzing={isAnalyzing}
-                                    accept=".apk,.exe,application/vnd.android.package-archive,application/x-msdownload"
-                                    description="Supports .APK and .EXE files (Max 100MB)"
-                                />
+                                {isAnalyzing ? (
+                                    <div className="animate-fade-in">
+                                        <div className="text-center mb-6">
+                                            <h3 className="text-xl font-bold text-emerald-400 animate-pulse">
+                                                INITIALIZING DEEP SCAN PROTOCOL...
+                                            </h3>
+                                            <p className="text-slate-500 text-sm">Please do not close this window.</p>
+                                        </div>
+                                        <TerminalLog />
+                                    </div>
+                                ) : (
+                                    <FileUploader
+                                        onUpload={handleFileSelect}
+                                        isAnalyzing={isAnalyzing}
+                                        accept=".apk,.exe,application/vnd.android.package-archive,application/x-msdownload"
+                                        description="Supports .APK and .EXE files (Max 100MB)"
+                                    />
+                                )}
                             </div>
                         </div>
                     ) : (

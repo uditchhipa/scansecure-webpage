@@ -1,39 +1,24 @@
-
 "use client";
 
 import { Footer } from "../components/Footer";
 import { ServiceCard } from "../components/ServiceCard";
 import { StatsCounter } from "../components/StatsCounter";
 import { FAQSection } from "../components/FAQSection";
-import { ShieldCheck, Smartphone, FileText, Globe } from "lucide-react";
+import { ThreatMap } from "../components/ThreatMap";
+import { Shield, ArrowRight, FileText, Smartphone, Globe, ShieldCheck, LogIn } from "lucide-react";
+import { Navbar } from "../components/Navbar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white selection:bg-emerald-500/30 font-sans flex flex-col">
-      {/* Navbar */}
-      <header className="fixed top-0 w-full bg-slate-950/80 backdrop-blur-md border-b border-white/10 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-lg group-hover:bg-emerald-500/40 transition-all duration-500" />
-              <div className="relative bg-slate-900 p-2 rounded-xl border border-white/10 group-hover:border-emerald-500/50 transition-colors">
-                <ShieldCheck className="w-6 h-6 text-emerald-500" />
-              </div>
-            </div>
-            <span className="font-bold text-lg tracking-tight">
-              Secure<span className="text-emerald-400">Scan</span>
-            </span>
-          </div>
-          <div className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">
-            v1.0 Live
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-emerald-500/30">
 
-      <main className="flex-1 pt-32 pb-20 px-4">
+      <Navbar />
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto space-y-20">
 
-          {/* Hero Section */}
+          {/* Hero Content */}
           <div className="text-center space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium animate-fade-in">
               <span className="relative flex h-2 w-2">
@@ -50,6 +35,8 @@ export default function Home() {
             </p>
           </div>
 
+
+          <ThreatMap />
           <StatsCounter />
 
           {/* Tools Grid */}
@@ -79,7 +66,7 @@ export default function Home() {
 
           <FAQSection />
         </div>
-      </main>
+      </section>
       <Footer />
     </div>
   );

@@ -5,3 +5,8 @@ pefile
 aiofiles
 razorpay
 requests
+python-dotenv
+sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
+fastapi-mail

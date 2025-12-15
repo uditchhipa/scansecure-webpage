@@ -62,5 +62,6 @@ async def send_otp_email(email: EmailStr, otp: str):
         return True
     except Exception as e:
         print(f"ERROR: Failed to send email: {e}")
+        print(f"⚠️  FALLBACK OTP (Use this to verify): {otp}")
         # Return True anyway to not block reg in dev, but ideally handle error
         return False

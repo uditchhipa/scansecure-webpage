@@ -96,7 +96,7 @@ async def callback_google(code: str, db: Session = Depends(get_db)):
             user = User(
                 email=email,
                 hashed_password=hashed_pass,
-                is_verified=True, # Trusted provider
+                verified=True,
                 api_key=secrets.token_hex(16)
             )
             db.add(user)
@@ -171,7 +171,7 @@ async def callback_github(code: str, db: Session = Depends(get_db)):
             user = User(
                 email=primary_email,
                 hashed_password=hashed_pass,
-                is_verified=True,
+                verified=True,
                 api_key=secrets.token_hex(16)
             )
             db.add(user)

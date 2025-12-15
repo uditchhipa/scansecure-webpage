@@ -24,11 +24,10 @@ import random # Added
 # Internal Modules
 from backend.analyzer.core import analyze_file as core_analyze_file
 from backend.analyzer.doc_analyzer import analyze_document
-from backend.analyzer.doc_analyzer import analyze_document
 from backend.analyzer.url_analyzer import analyze_url
 from backend.analyzer.metadata_utils import extract_metadata, remove_metadata, spoof_metadata, clean_files_and_zip
 from backend.analyzer.site_auditor import analyze_site
-from backend.analyzer.site_auditor import analyze_site
+from backend.analyzer.port_scanner import scan_ports
 
 # Auth & DB Modules
 from backend import models
@@ -454,3 +453,17 @@ async def upload_file(
         print(f"Error processing upload: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 from datetime import timedelta # Missing import fix
+
+@app.post("/tools/scan-ports")
+async def scan_ports_endpoint(
+    request: URLRequest,
+    req: Request,
+    current_user: Optional[models.User] = Depends(auth.get_current_user_optional_fast)
+):
+    check_guest_limit(req, current_user)
+    
+    # Run port scan in thread
+    import asyncio
+    ports = await asyncio.to_thread(scan_ports, request.url)
+    
+    return {"ports": ports}

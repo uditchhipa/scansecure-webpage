@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
+import { PortScanner } from "@/components/PortScanner";
 import { ShieldCheck, Lock, Globe, AlertTriangle, CheckCircle, XCircle, Search, Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -64,7 +65,7 @@ export default function SiteAuditor() {
         <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500/30">
             <Navbar />
 
-            <main className="max-w-5xl mx-auto px-6 py-12">
+            <main className="max-w-5xl mx-auto px-6 pt-32 pb-12">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
                         Website Security Auditor
@@ -146,6 +147,11 @@ export default function SiteAuditor() {
                                     {report.score}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Port Scanner */}
+                        <div className="relative z-10 mb-8">
+                            <PortScanner url={report.url} />
                         </div>
 
                         {/* Checks Grid */}

@@ -98,7 +98,7 @@ export default function LoginPage() {
                     {/* Social Buttons */}
                     <div className="grid grid-cols-2 gap-3 mb-8">
                         <button
-                            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082"}/auth/google/login`}
+                            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://mysecurescan.onrender.com"}/auth/google/login`}
                             className="flex items-center justify-center gap-2 bg-white text-slate-900 text-sm font-semibold py-2.5 rounded-md hover:bg-slate-200 transition-colors"
                         >
                             <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ export default function LoginPage() {
                             Google
                         </button>
                         <button
-                            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082"}/auth/github/login`}
+                            onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://mysecurescan.onrender.com"}/auth/github/login`}
                             className="flex items-center justify-center gap-2 bg-[#1a1c1e] text-white text-sm font-semibold py-2.5 rounded-md border border-white/5 hover:bg-[#25282c] transition-colors"
                         >
                             <Github className="w-4 h-4 text-white" />

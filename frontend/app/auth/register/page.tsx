@@ -19,7 +19,8 @@ export default function RegisterPage() {
         setError("");
 
         try {
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082";
+            // const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://securescane-backend.onrender.com";
             const res = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

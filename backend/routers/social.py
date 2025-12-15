@@ -33,7 +33,10 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 # For simplicity, we might hardcode or use an ENV var for BASE_URL
 # In PROD: https://securescane-backend.onrender.com
 # In DEV: http://localhost:8082
-BACKEND_URL = os.getenv("NEXT_PUBLIC_API_URL", "http://localhost:8082") 
+# PROD: https://securescane-backend.onrender.com
+# DEV: http://localhost:8082
+BACKEND_URL = os.getenv("NEXT_PUBLIC_API_URL", "https://securescane-backend.onrender.com")
+
 # Note: Google requires EXACT match. 
 # Ideally, define "GOOGLE_REDIRECT_URI" in .env
 GOOGLE_REDIRECT_URI = f"{BACKEND_URL}/auth/google/callback"
@@ -42,8 +45,8 @@ GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
 GITHUB_REDIRECT_URI = f"{BACKEND_URL}/auth/github/callback"
 
-# PROD: https://scansecure.vercel.app (or similar)
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+# PROD: https://scansecure.vercel.app
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://scansecure.vercel.app")
 
 # --- GOOGLE ---
 

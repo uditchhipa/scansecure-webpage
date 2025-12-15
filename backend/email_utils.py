@@ -48,11 +48,13 @@ async def send_otp_email(email: EmailStr, otp: str):
         print(f"\n[DEV MODE] 📧 EMAIL SIMULATOR 📧\nTo: {email}\nSubject: Verify Account\nCode: {otp}\n[END SIMULATION]\n")
         return True
 
+    print(f"DEBUG: Attempting to send email to {email} via {conf.MAIL_SERVER}...")
     try:
         fm = FastMail(conf)
         await fm.send_message(message)
+        print("DEBUG: Email sent successfully!")
         return True
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print(f"ERROR: Failed to send email: {e}")
         # Return True anyway to not block reg in dev, but ideally handle error
         return False

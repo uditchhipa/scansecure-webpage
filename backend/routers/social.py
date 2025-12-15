@@ -45,8 +45,8 @@ GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_CLIENT_SECRET")
 GITHUB_REDIRECT_URI = f"{BACKEND_URL}/auth/github/callback"
 
-# PROD: https://scansecure.vercel.app
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://scansecure.vercel.app")
+# PROD: https://mysecurescan.tech (Custom Domain)
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://mysecurescan.tech")
 
 # --- GOOGLE ---
 

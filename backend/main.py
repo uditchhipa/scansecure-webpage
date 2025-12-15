@@ -156,8 +156,10 @@ app.add_middleware(
 )
 
 # --- Auth Endpoints ---
+from fastapi import BackgroundTasks
+
 @app.post("/auth/register", response_model=UserResponse)
-async def register(user: UserCreate, db: Session = Depends(get_db)):
+async def register(user: UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -183,11 +185,8 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Database Error: {str(e)}")
     
-    # Send Email
-    try:
-        await send_otp_email(user.email, otp)
-    except Exception as e:
-        print(f"Failed to send email: {e}")
+    # Send Email in Background (Non-blocking)
+    background_tasks.add_task(send_otp_email, user.email, otp)
     
     return new_user
 

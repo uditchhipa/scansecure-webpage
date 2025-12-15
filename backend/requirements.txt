@@ -12,3 +12,4 @@ python-jose[cryptography]
 fastapi-mail
 Pillow
 piexif
+psycopg2-binary

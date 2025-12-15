@@ -11,9 +11,9 @@ To join affiliate programs, you need a live website link. Here is the best $0 te
     3.  Click **New +** -> **Web Service**.
     4.  Connect your GitHub repo: `SecureScane`.
     5.  Settings:
-        *   **Root Directory**: `backend`
-        *   **Build Command**: `pip install -r requirements.txt`
-        *   **Start Command**: `uvicorn main:app --host 0.0.0.0 --port 10000`
+        *   **Root Directory**: `.` (Empty - Project Root)
+        *   **Build Command**: `pip install -r backend/requirements.txt`
+        *   **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port 10000`
     6.  Click **Deploy**. You will get a link like `https://securescane-backend.onrender.com`.
 
 ### 2. Frontend (Next.js) -> **Vercel**
@@ -79,9 +79,9 @@ Since you have the **Student Pack**, you are sitting on a goldmine! usage these 
     2.  **Deploy Backend (Python)**:
         *   Click **New +** -> **Web Service**.
         *   Connect `scansecure-webpage`.
-        *   Root Directory: `backend`.
-        *   Build Command: `pip install -r requirements.txt`.
-        *   Start Command: `uvicorn main:app --host 0.0.0.0 --port 10000`.
+        *   Root Directory: `.` (Leave Empty).
+        *   Build Command: `pip install -r backend/requirements.txt`.
+        *   Start Command: `uvicorn backend.main:app --host 0.0.0.0 --port 10000`.
         *   Select **"Free"** instance type.
         *   Click **Deploy**. Copy the URL (e.g., `https://securescan-backend.onrender.com`).
     3.  **Deploy Frontend (Next.js)**:

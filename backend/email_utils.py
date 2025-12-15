@@ -14,10 +14,16 @@ conf = ConnectionConfig(
     MAIL_FROM=os.getenv("MAIL_FROM", "noreply@scansecure.io"),
     MAIL_PORT=int(os.getenv("MAIL_PORT", 587)),
     MAIL_SERVER=os.getenv("MAIL_SERVER", "smtp.gmail.com"),
-    MAIL_STARTTLS=True,
-    MAIL_SSL_TLS=False,
+    MAIL_STARTTLS=os.getenv("MAIL_STARTTLS", "True").lower() == "true",
+    MAIL_SSL_TLS=os.getenv("MAIL_SSL_TLS", "False").lower() == "true",
     USE_CREDENTIALS=True,
     VALIDATE_CERTS=True
+)
+
+# Auto-configure for Port 465 (SSL)
+if conf.MAIL_PORT == 465:
+    conf.MAIL_SSL_TLS = True
+    conf.MAIL_STARTTLS = False
 )
 
 async def send_otp_email(email: EmailStr, otp: str):

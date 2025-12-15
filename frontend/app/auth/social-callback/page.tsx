@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function SocialCallback() {
+function SocialCallbackContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -33,5 +33,20 @@ export default function SocialCallback() {
                 <p className="text-slate-400">Verifying tokens with provider</p>
             </div>
         </div>
+    );
+}
+
+export default function SocialCallback() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <h2 className="text-xl font-bold text-white">Loading...</h2>
+                </div>
+            </div>
+        }>
+            <SocialCallbackContent />
+        </Suspense>
     );
 }

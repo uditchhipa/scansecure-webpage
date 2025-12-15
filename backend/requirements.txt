@@ -13,3 +13,4 @@ fastapi-mail
 Pillow
 piexif
 psycopg2-binary
+resend

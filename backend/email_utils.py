@@ -21,15 +21,17 @@ conf = ConnectionConfig(
 )
 
 # Auto-configure for Port 465 (SSL)
-if conf.MAIL_PORT == 465:
-    conf.MAIL_SSL_TLS = True
-    conf.MAIL_STARTTLS = False
-
+# Auto-configure Resend
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+if RESEND_API_KEY:
+    import resend
+    resend.api_key = RESEND_API_KEY
 
 async def send_otp_email(email: EmailStr, otp: str):
     """
     Sends an OTP email to the user.
-    If credentials are dummy/default, it prints to console for Dev Mode.
+    Prioritizes Resend API (Reliable on Render).
+    Fallbacks to SMTP (Gmail) if API Key missing.
     """
     
     html = f"""
@@ -42,26 +44,41 @@ async def send_otp_email(email: EmailStr, otp: str):
     </div>
     """
 
-    message = MessageSchema(
-        subject="Your SecureScan Verification Code",
-        recipients=[email],
-        body=html,
-        subtype=MessageType.html
-    )
-
+    # 1. Try Resend API (HTTP - Not blocked by firewall)
+    if RESEND_API_KEY:
+        print(f"DEBUG: Attempting to send via Resend API to {email}...")
+        try:
+            r = resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": email,
+                "subject": "Your SecureScan Verification Code",
+                "html": html
+            })
+            print(f"DEBUG: Resend API Success: {r}")
+            return True
+        except Exception as e:
+            print(f"ERROR: Resend API Failed: {e}")
+            # Fallthrough to SMTP or Log
+            
+    # 2. Try SMTP (Fall-back or Dev Mode)
     # Dev Mode Fallback: If password is "your-app-password", don't crash, just print.
     if conf.MAIL_PASSWORD == "your-app-password":
         print(f"\n[DEV MODE] 📧 EMAIL SIMULATOR 📧\nTo: {email}\nSubject: Verify Account\nCode: {otp}\n[END SIMULATION]\n")
         return True
 
-    print(f"DEBUG: Attempting to send email to {email} via {conf.MAIL_SERVER}...")
+    print(f"DEBUG: Attempting to send email to {email} via SMTP {conf.MAIL_SERVER}...")
     try:
         fm = FastMail(conf)
+        message = MessageSchema(
+            subject="Your SecureScan Verification Code",
+            recipients=[email],
+            body=html,
+            subtype=MessageType.html
+        )
         await fm.send_message(message)
         print("DEBUG: Email sent successfully!")
         return True
     except Exception as e:
-        print(f"ERROR: Failed to send email: {e}")
+        print(f"ERROR: Failed to send email via SMTP: {e}")
         print(f"⚠️  FALLBACK OTP (Use this to verify): {otp}")
-        # Return True anyway to not block reg in dev, but ideally handle error
         return False

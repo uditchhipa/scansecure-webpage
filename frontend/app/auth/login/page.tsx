@@ -93,6 +93,11 @@ export default function LoginPage() {
                             />
                             <Lock className="absolute right-3 top-3 w-4 h-4 text-slate-600" />
                         </div>
+                        <div className="text-right mt-1">
+                            <Link href="/auth/forgot-password" className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold tracking-wide">
+                                FORGOT PASSWORD?
+                            </Link>
+                        </div>
                     </div>
 
                     <button

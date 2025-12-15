@@ -8,8 +8,8 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 import os
 
-from database import get_db
-import models
+from backend.database import get_db
+from backend import models
 
 # Secret key for JWT encoding (should be in .env in production)
 SECRET_KEY = "super-secret-key-change-this-in-prod"

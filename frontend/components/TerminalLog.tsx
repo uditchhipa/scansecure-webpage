@@ -67,11 +67,11 @@ export default function TerminalLog() {
                 {lines.map((line, i) => (
                     <div
                         key={i}
-                        className={`transition-opacity duration-300 ${line.includes("WARNING")
-                                ? "text-amber-400 font-bold"
-                                : line.startsWith(">")
-                                    ? "text-emerald-400"
-                                    : "text-slate-400"
+                        className={`transition-opacity duration-300 ${line?.includes("WARNING")
+                            ? "text-amber-400 font-bold"
+                            : line?.startsWith(">")
+                                ? "text-emerald-400"
+                                : "text-slate-400"
                             }`}
                     >
                         <span className="opacity-50 mr-2">[{new Date().toLocaleTimeString().split(' ')[0]}]</span>

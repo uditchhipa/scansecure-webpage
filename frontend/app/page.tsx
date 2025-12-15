@@ -40,7 +40,7 @@ export default function Home() {
           <StatsCounter />
 
           {/* Tools Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
             <ServiceCard
               title="App Scanner"
               description="Deep analyze Android APKs and Windows EXEs. Checks permissions, secrets, and dangerous imports."
@@ -60,6 +60,20 @@ export default function Home() {
               description="Check suspicious links for phishing attempts and scam domains before you click."
               icon={Globe}
               href="/url-scanner"
+              color="indigo"
+            />
+            <ServiceCard
+              title="Privacy Tool"
+              description="Remove hidden GPS location and device metadata from your photos before sharing."
+              icon={Shield}
+              href="/tools/metadata"
+              color="rose"
+            />
+            <ServiceCard
+              title="Website Auditor"
+              description="Check your site's health. Scan SSL, Headers, and Privacy leaks."
+              icon={Globe}
+              href="/tools/auditor"
               color="indigo"
             />
           </div>

@@ -10,3 +10,5 @@ sqlalchemy
 passlib[bcrypt]
 python-jose[cryptography]
 fastapi-mail
+Pillow
+piexif

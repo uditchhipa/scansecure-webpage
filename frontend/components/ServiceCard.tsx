@@ -7,7 +7,7 @@ interface ServiceCardProps {
     description: string;
     icon: LucideIcon;
     href: string;
-    color: "emerald" | "blue" | "indigo";
+    color: "emerald" | "blue" | "indigo" | "rose";
 }
 
 export function ServiceCard({ title, description, icon: Icon, href, color }: ServiceCardProps) {
@@ -15,6 +15,7 @@ export function ServiceCard({ title, description, icon: Icon, href, color }: Ser
         emerald: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 group-hover:border-emerald-500/50 group-hover:bg-emerald-500/20",
         blue: "bg-blue-500/10 border-blue-500/20 text-blue-400 group-hover:border-blue-500/50 group-hover:bg-blue-500/20",
         indigo: "bg-indigo-500/10 border-indigo-500/20 text-indigo-400 group-hover:border-indigo-500/50 group-hover:bg-indigo-500/20",
+        rose: "bg-rose-500/10 border-rose-500/20 text-rose-400 group-hover:border-rose-500/50 group-hover:bg-rose-500/20",
     };
 
     return (

@@ -58,10 +58,10 @@ export default function RegisterPage() {
                 {/* Social Login Buttons */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                     <button
-                        onClick={() => alert("Google Signup coming soon! (Requires OAuth Setup)")}
-                        className="flex items-center justify-center gap-2 bg-white text-slate-900 font-bold py-2.5 rounded-xl hover:bg-slate-200 transition-colors"
+                        onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082"}/auth/google/login`}
+                        className="group flex items-center justify-center gap-2 bg-white text-slate-900 font-bold py-2.5 rounded-xl transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]"
                     >
-                        <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
                             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
@@ -70,10 +70,10 @@ export default function RegisterPage() {
                         Google
                     </button>
                     <button
-                        onClick={() => alert("GitHub Signup coming soon! (Requires OAuth Setup)")}
-                        className="flex items-center justify-center gap-2 bg-slate-800 text-white font-bold py-2.5 rounded-xl border border-white/10 hover:bg-slate-700 transition-colors"
+                        onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082"}/auth/github/login`}
+                        className="group flex items-center justify-center gap-2 bg-slate-900 text-white font-bold py-2.5 rounded-xl border border-white/10 transition-all hover:scale-[1.02] hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:bg-slate-800"
                     >
-                        <Github className="w-5 h-5" />
+                        <Github className="w-5 h-5 group-hover:text-emerald-400 transition-colors" />
                         GitHub
                     </button>
                 </div>
@@ -88,7 +88,7 @@ export default function RegisterPage() {
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-400 text-sm">
+                    <div className="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-2 text-red-400 text-sm shadow-[0_0_15px_rgba(239,68,68,0.2)]">
                         <AlertCircle className="w-4 h-4" />
                         {error}
                     </div>
@@ -100,7 +100,7 @@ export default function RegisterPage() {
                         <input
                             type="email"
                             required
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 focus:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all placeholder:text-slate-700"
                             placeholder="agent@scansecure.io"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                             type="password"
                             required
                             minLength={6}
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500 focus:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all placeholder:text-slate-700"
                             placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -123,7 +123,7 @@ export default function RegisterPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_35px_rgba(16,185,129,0.6)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? "Generating Keys..." : "Register User"}
                     </button>
@@ -135,7 +135,7 @@ export default function RegisterPage() {
                             localStorage.setItem("token", "guest_token");
                             router.push("/dashboard");
                         }}
-                        className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-3 rounded-xl transition-all border border-white/5"
+                        className="w-full bg-slate-800/50 hover:bg-slate-800 text-slate-300 font-medium py-3 rounded-xl transition-all border border-white/5 hover:border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
                     >
                         🕵️ Continue as Guest
                     </button>
@@ -143,7 +143,7 @@ export default function RegisterPage() {
 
                 <div className="mt-8 text-center text-sm text-slate-500">
                     Already authorized?{" "}
-                    <Link href="/auth/login" className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors">
+                    <Link href="/auth/login" className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors hover:shadow-[0_0_10px_rgba(16,185,129,0.4)]">
                         Login here
                     </Link>
                 </div>

@@ -35,6 +35,7 @@ from backend import database
 from backend import auth
 from backend.database import engine, get_db
 from backend.email_utils import send_otp_email 
+from backend.routers import social
 
 # Create Tables
 models.Base.metadata.create_all(bind=engine)
@@ -81,6 +82,9 @@ razorpay_client = razorpay.Client(auth=(
 ))
 
 app = FastAPI(title="ScanSecure API", version="2.0")
+
+# Include Social Auth Router
+app.include_router(social.router)
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

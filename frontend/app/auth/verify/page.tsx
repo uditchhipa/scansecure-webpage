@@ -15,6 +15,17 @@ function VerifyContent() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [timer, setTimer] = useState(0);
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prev) => prev - 1);
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [timer]);
 
     useEffect(() => {
         const emailParam = searchParams.get("email");
@@ -158,7 +169,10 @@ function VerifyContent() {
                                 Did not receive the code?
                                 <button
                                     type="button"
+                                    disabled={timer > 0}
                                     onClick={async () => {
+                                        if (timer > 0) return;
+                                        setTimer(60); // 60 seconds cooldown
                                         try {
                                             const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8082";
                                             const res = await fetch(`${API_URL}/auth/resend-otp`, {
@@ -166,13 +180,20 @@ function VerifyContent() {
                                                 headers: { "Content-Type": "application/json" },
                                                 body: JSON.stringify({ email }),
                                             });
-                                            if (res.ok) alert("New verification code sent!");
-                                            else alert("Failed to resend code. Please try again.");
-                                        } catch (e) { console.error(e); alert("Network error"); }
+                                            if (res.ok) alert("New verification code sent! Check your inbox.");
+                                            else {
+                                                alert("Failed to resend code.");
+                                                setTimer(0); // Reset on failure
+                                            }
+                                        } catch (e) {
+                                            console.error(e);
+                                            alert("Network error");
+                                            setTimer(0);
+                                        }
                                     }}
-                                    className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium ml-1"
+                                    className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium ml-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Resend
+                                    {timer > 0 ? `Resend in ${timer}s` : "Resend"}
                                 </button>
                             </p>
                         </div>

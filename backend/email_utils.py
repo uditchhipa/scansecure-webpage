@@ -24,7 +24,7 @@ conf = ConnectionConfig(
 if conf.MAIL_PORT == 465:
     conf.MAIL_SSL_TLS = True
     conf.MAIL_STARTTLS = False
-)
+
 
 async def send_otp_email(email: EmailStr, otp: str):
     """

@@ -22,7 +22,7 @@ export default function LoginPage() {
             formData.append('username', email);
             formData.append('password', password);
 
-            const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://securescane-backend.onrender.com";
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://mysecurescan.onrender.com";
             const res = await fetch(`${API_URL}/auth/token`, {
                 method: "POST",
                 body: formData,

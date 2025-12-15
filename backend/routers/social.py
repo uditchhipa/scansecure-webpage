@@ -33,9 +33,9 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 # For simplicity, we might hardcode or use an ENV var for BASE_URL
 # In PROD: https://securescane-backend.onrender.com
 # In DEV: http://localhost:8082
-# PROD: https://securescane-backend.onrender.com
+# PROD: https://mysecurescan.onrender.com
 # DEV: http://localhost:8082
-BACKEND_URL = os.getenv("NEXT_PUBLIC_API_URL", "https://securescane-backend.onrender.com")
+BACKEND_URL = os.getenv("NEXT_PUBLIC_API_URL", "https://mysecurescan.onrender.com")
 
 # Note: Google requires EXACT match. 
 # Ideally, define "GOOGLE_REDIRECT_URI" in .env
@@ -52,6 +52,7 @@ FRONTEND_URL = os.getenv("FRONTEND_URL", "https://mysecurescan.tech")
 
 @router.get("/google/login")
 async def login_google():
+    print(f"DEBUG: Google Redirect URI: {GOOGLE_REDIRECT_URI}")
     return RedirectResponse(
         f"https://accounts.google.com/o/oauth2/auth?response_type=code&client_id={GOOGLE_CLIENT_ID}&redirect_uri={GOOGLE_REDIRECT_URI}&scope=openid%20profile%20email&access_type=offline"
     )

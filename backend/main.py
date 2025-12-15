@@ -466,3 +466,18 @@ async def scan_ports_endpoint(
     ports = await asyncio.to_thread(scan_ports, request.url)
     
     return {"ports": ports}
+
+@app.get("/tools/debug-email")
+async def debug_email_endpoint(email: str):
+    """
+    Directly test email sending to verify credentials.
+    Access via: /tools/debug-email?email=your@gmail.com
+    """
+    import logging
+    print(f"DEBUG: Manual email test for {email}")
+    
+    try:
+        await send_otp_email(email, "123456")
+        return {"status": "success", "message": "Email sent! Check inbox."}
+    except Exception as e:
+        return {"status": "error", "message": str(e), "hint": "Check MAIL_PASSWORD (App Password) and MAIL_PORT (587) in Render Env Vars."}
